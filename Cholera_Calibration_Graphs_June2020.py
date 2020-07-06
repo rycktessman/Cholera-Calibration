@@ -231,7 +231,7 @@ style_naive='dotted'
 text_size=36
 ticks_size=30
 legend_size=30
-bw_rs=dict(zip((list(params_prior)[2:]),[1,1,.5,.5,3,3,3,3,.5,.5,.5,1,2,2,2,2,2,2,2,2,2,2,5,5]))
+bw_rs=dict(zip((list(params_prior)[2:]),[2,2,1,1.5,7,7,7,7,1,1,1,1,5,5,5,5,7,7,7,7,5,5,5,5]))
 bw_imis=dict(zip((list(params_prior)[2:]),[2,2,1,1.5,7,7,7,7,1,1,1,1,5,5,5,5,7,7,7,7,5,5,5,5]))
 bw_sir=dict(zip((list(params_prior)[2:]),[2,2,1,1.5,7,7,7,7,1,1,1,1,5,5,5,5,7,7,7,7,5,5,5,5]))
 bw_prior=dict(zip((list(params_prior)[2:]),[2,2,1,1.5,7,7,7,7,1,1,1,1,5,5,5,5,7,7,7,7,5,5,5,5]))
@@ -240,8 +240,8 @@ mults=dict(zip((list(params_prior)[2:]),[1000,1000,1000,1000,100,100,100,100,100
 x_hi=dict(zip((list(params_prior)[2:]),[70,100,25,25,100,100,100,100,10,10,10,10,50,50,50,50,100,100,100,100,100,100,100,100]))
 x_lo=dict(zip((list(params_prior)[2:]),[0,0,0,0,30,30,30,30,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]))
 y_hi=dict(zip((list(params_prior)[2:]),[.35,.35,.35,.35,.08,.08,.08,.08,.35,.35,.35,.35,.08,.08,.08,.08,.08,.08,.08,.08,.08,.08,.08,.08]))
-xlabels=dict(zip((list(params_prior)[2:]), ['Cases per 1000','Cases per 1000','Cases per 1000','Cases per 1000', 'Case Fatanaivey (%)', 'Case Fatanaivey (%)','Case Fatanaivey (%)','Case Fatanaivey (%)',
-                 'Case Fatanaivey (%)', 'Case Fatanaivey (%)', 'Case Fatanaivey (%)', 'Case Fatanaivey (%)', '% Cases that are Severe','% Cases that are Severe','% Cases that are Severe','% Cases that are Severe',
+xlabels=dict(zip((list(params_prior)[2:]), ['Cases per 1000','Cases per 1000','Cases per 1000','Cases per 1000', 'Case Fatality (%)', 'Case Fatality (%)','Case Fatality (%)','Case Fatality (%)',
+                 'Case Fatality (%)', 'Case Fatality (%)', 'Case Fatality (%)', 'Case Fatality (%)', '% Cases that are Severe','% Cases that are Severe','% Cases that are Severe','% Cases that are Severe',
                  'Mild Case Hosp. (%)','Mild Case Hosp. (%)','Mild Case Hosp. (%)','Mild Case Hosp. (%)',
                  'Severe Case Hosp. (%)','Severe Case Hosp. (%)','Severe Case Hosp. (%)','Severe Case Hosp. (%)']))
 titles=dict(zip((list(params_prior)[2:]), param_list_long))
@@ -256,16 +256,18 @@ for i in list(params_prior)[2:]:
     sns.kdeplot(params_prior[i]*mults[i], bw=bw_prior[i], color=color_prior, linestyle=style_prior, lw=line_width)
     sns.kdeplot(params_imis_post[i]*mults[i], bw=bw_imis[i], color=color_imis, linestyle=style_imis, lw=line_width_imis)
     sns.kdeplot(params_sir_post[i]*mults[i], bw=bw_sir[i], color=color_sir, linestyle=style_sir, lw=line_width)
-    #sns.kdeplot(params_rs_post[i]*mults[i], bw=bw_rs[i], color=color_rs, linestyle=style_rs, lw=line_width)
+    sns.kdeplot(params_rs_post[i]*mults[i], bw=bw_rs[i], color=color_rs, linestyle=style_rs, lw=line_width)
     sns.kdeplot(params_naive[i]*mults[i], bw=bw_naive[i], color=color_naive, linestyle=style_naive, lw=line_width)
     plt.xticks(fontsize=ticks_size)
     plt.yticks(fontsize=ticks_size)
     custom_lines = [Line2D([0], [0], color=color_prior, lw=line_width, linestyle=style_prior),
                     Line2D([0], [0], color=color_imis, lw=line_width, linestyle=style_imis),
                     Line2D([0], [0], color=color_sir, lw=line_width, linestyle=style_sir),
-                    Line2D([0], [0], color=color_rs, lw=line_width, linestyle=style_rs)]
+                    Line2D([0], [0], color=color_rs, lw=line_width, linestyle=style_rs),
+                    Line2D([0], [0], color=color_naive, lw=line_width, linestyle=style_naive)]
     if j==1:
-        plt.legend(custom_lines, ['Priors', 'IMIS Posteriors', 'SIR Posteriors', 'RS Posteriors'], fontsize=legend_size)
+        plt.legend(custom_lines, ['Priors', 'IMIS Posteriors', 'SIR Posteriors', 
+                                  'RS Posteriors', 'Naive Parameters'], fontsize=legend_size)
     else:
         plt.legend().set_visible(False)
     plt.title(titles[i], fontsize=text_size)
@@ -279,9 +281,10 @@ for i in list(params_prior)[2:]:
 j=0
 burden_subset=list(burden_imis)[0:14]+list(burden_imis)[34:36]+[list(burden_imis)[21]] + [list(burden_imis)[36]]+list(burden_imis)[25:28]
 bw_imis=dict(zip((burden_subset),[6,15,15,50,.05,.005,.1,1,4,1,2,5,5,1,.25,.25,.25,.25,.25,.25,.25]))
-bw_sir=dict(zip((burden_subset), [6,15,15,50,.05,.005,.1,1,4,1,2,5,5,3,1,1,1,1,2,2,.25]))
-bw_rs=dict(zip((burden_subset), [2,10,10,25,.05,.005,.05,.5,1,.5,2,2,2,.5,.2,.2,.1,.1,.25,.25,.25]))
-bw_naive=dict(zip((burden_subset), [2,10,5,10,.05,.01,.05,.5,.5,.5,2,2,2,1.5,.2,.2,.2,.5,1,.25,1]))
+bw_sir=dict(zip((burden_subset), [6,15,15,50,.05,.005,.1,1,4,1,2,5,5,1,.25,.25,.25,.25,.25,.25,.25]))
+bw_rs=dict(zip((burden_subset), [6,15,15,50,.05,.005,.1,1,4,1,2,5,5,1,.25,.25,.25,.25,.25,.25,.25]))
+bw_prior=dict(zip((burden_subset), [6,15,15,50,.05,.005,.1,1,4,1,2,5,5,1,.25,.25,.25,.25,.25,.25,.25]))
+bw_naive=dict(zip((burden_subset), [6,15,15,50,.05,.005,.1,1,4,1,2,5,5,1,.25,.25,.25,.25,.25,.25,.25]))
 x_hi=dict(zip((burden_subset),[120,600,400,1100,1.8,0.3,1.8,15,60,60,120,200,120,60,10,15,10,15,30,25,25]))
 axis_size=32
 ticks_size=28
@@ -303,18 +306,21 @@ mults=dict(zip((burden_subset), [1/1000,1/1000,1/1000,1/1000,1/1000000,1/1000000
 for i in burden_subset:
     fig=plt.figure(figsize=(8,7))
     plt.xlim((0,x_hi[i]))
+    sns.kdeplot(burden_prior[i]*mults[i], color=color_prior, lw=line_width, linestyle=style_prior, bw=bw_prior[i])
     sns.kdeplot(burden_naive[i]*mults[i], color=color_naive, lw=line_width, linestyle=style_naive, bw=bw_naive[i])
     sns.kdeplot(burden_sir[i]*mults[i], color=color_sir, lw=line_width, linestyle=style_sir, bw=bw_sir[i])
-    #sns.kdeplot(burden_rs[i]*mults[i], color=color_rs, lw=line_width, linestyle=style_rs, bw=bw_rs[i])
+    sns.kdeplot(burden_rs[i]*mults[i], color=color_rs, lw=line_width, linestyle=style_rs, bw=bw_rs[i])
     sns.kdeplot(burden_imis[i]*mults[i], color=color_imis, lw=line_width, linestyle=style_imis, bw=bw_imis[i])
     plt.xticks(fontsize=ticks_size)
     plt.yticks(fontsize=ticks_size)
-    custom_lines = [Line2D([0], [0], color=color_naive, lw=line_width, linestyle=style_naive),
+    custom_lines = [Line2D([0], [0], color=color_prior, lw=line_width, linestyle=style_prior),
                     Line2D([0], [0], color=color_imis, lw=line_width, linestyle=style_imis),
                     Line2D([0], [0], color=color_sir, lw=line_width, linestyle=style_sir),
-                    Line2D([0], [0], color=color_rs, lw=line_width, linestyle=style_rs)]
+                    Line2D([0], [0], color=color_rs, lw=line_width, linestyle=style_rs),
+                    Line2D([0], [0], color=color_naive, lw=line_width, linestyle=style_naive)]
     if j==0:
-        plt.legend(custom_lines, ['Naive', 'IMIS', 'SIR', 'RS'], fontsize=axis_size)
+         plt.legend(custom_lines, ['Priors', 'IMIS Posteriors', 'SIR Posteriors', 
+                                  'RS Posteriors', 'Naive Parameters'], fontsize=legend_size)
     else:
         plt.legend().set_visible(False)
     plt.title(titles[i], fontsize=text_size)
@@ -324,189 +330,57 @@ for i in burden_subset:
     j+=1
 
 #Model output vs. targets
-text_size=30
 ticks_size=24
 title_size=34
 line_width=.002
 
-def target_plot(data, targets, title, ylabel, filename):
-#STOPPED HERE
+def target_plot(data, targets, mult, color, title, ylabel, filename):
+    fig=plt.figure(figsize=(8,6.5))
+    plt.plot(BGD_Pop[:,0], (mult*np.array(data)), color=color, linewidth=line_width)
+    plt.plot(BGD_Pop[:,0], mult*targets, color='0.1')
+    plt.title(title, fontsize=text_size)
+    plt.xlabel("Age", fontsize=ticks_size)
+    plt.ylabel(ylabel, fontsize=ticks_size)
+    plt.xticks(fontsize=ticks_size)
+    plt.yticks(fontsize=ticks_size)
+    fig.savefig('targets_'+filename, dpi=500, bbox_inches='tight')
 
-#IMIS
-#deaths imis post
-fig=plt.figure(figsize=(8,6.5))
-plt.plot(BGD_Pop[:,0], (100*np.array(deaths_imis_post)), color=color_imis, linewidth=line_width)
-plt.plot(BGD_Pop[:,0], 100*deaths_target, color='0.1')
-plt.ylim((0, 20))
-plt.title("% Deaths from Cholera", fontsize=title_size)
-plt.xlabel("Age", fontsize=ticks_size, color="white")
-plt.ylabel("% deaths caused by cholera", fontsize=ticks_size)
-plt.xticks(fontsize=ticks_size, color="white")
-plt.yticks([0,5,10,15,20], fontsize=ticks_size)
-fig.savefig('Deaths_Targets_IMIS', dpi=500, bbox_inches='tight')
+#deaths target graphs
+target_plot(deaths_imis_post, deaths_target, 100, color_imis, "% Deaths from Cholera", 
+            "% deaths caused by cholera", 'deaths_imis')
+target_plot(deaths_sir_post, deaths_target, 100, color_sir, "% Deaths from Cholera", 
+            "% deaths caused by cholera", 'deaths_sir')
+target_plot(deaths_rs_post, deaths_target, 100, color_rs, "% Deaths from Cholera", 
+            "% deaths caused by cholera", 'deaths_rs')
+target_plot(deaths_naive, deaths_target, 100, color_naive, "% Deaths from Cholera", 
+            "% deaths caused by cholera", 'deaths_naive')
+target_plot(deaths_prior, deaths_target, 100, color_prior, "% Deaths from Cholera", 
+            "% deaths caused by cholera", 'deaths_prior')
+#all incidence target graphs
+target_plot(inc_imis_post, inc_target, 1000, color_imis, "Observed Cholera Incidence", 
+            "hosp. cases per 1000", 'inc_imis')
+target_plot(inc_sir_post, inc_target, 1000, color_sir, "Observed Cholera Incidence", 
+            "hosp. cases per 1000", 'inc_sir')
+target_plot(inc_rs_post, inc_target, 1000, color_rs, "Observed Cholera Incidence", 
+            "hosp. cases per 1000", 'inc_rs')
+target_plot(inc_naive, inc_target, 1000, color_naive, "Observed Cholera Incidence", 
+            "hosp. cases per 1000", 'inc_naive')
+target_plot(inc_prior, inc_target, 1000, color_prior, "Observed Cholera Incidence", 
+            "hosp. cases per 1000", 'inc_prior')
+#severe incidence target graphs
+target_plot(sev_inc_imis_post, sev_inc_target, 1000, color_imis, "Observed Severe Cholera Inc.", 
+            "hosp. cases per 1000", 'sev_inc_imis')
+target_plot(sev_inc_sir_post, sev_inc_target, 1000, color_sir, "Observed Severe Cholera Inc.", 
+            "hosp. cases per 1000", 'sev_inc_sir')
+target_plot(sev_inc_rs_post, sev_inc_target, 1000, color_rs, "Observed Severe Cholera Inc.", 
+            "hosp. cases per 1000", 'sev_inc_rs')
+target_plot(sev_inc_naive, sev_inc_target, 1000, color_naive, "Observed Severe Cholera Inc.", 
+            "hosp. cases per 1000", 'sev_inc_naive')
+target_plot(sev_inc_prior, sev_inc_target, 1000, color_prior, "Observed Severe Cholera Inc.", 
+            "hosp. cases per 1000", 'sev_inc_prior')
 
-#incidence post IMIS
-fig=plt.figure(figsize=(8,6.5))
-plt.plot(BGD_Pop[:,0], (1000*np.array(inc_imis_post)), color=color_imis, linewidth=line_width)
-plt.plot(BGD_Pop[:,0], 1000*inc_target, color='0.1')
-plt.title("Observed Cholera Incidence", fontsize=title_size)
-plt.xlabel("Age", fontsize=ticks_size, color="white")
-plt.ylabel("hosp. cases per 1000", fontsize=ticks_size)
-plt.xticks(fontsize=ticks_size, color="white")
-plt.yticks(fontsize=ticks_size)
-fig.savefig('Inc_Targets_IMIS.png', dpi=500, bbox_inches='tight')
-
-#severe incidence post IMIS
-fig=plt.figure(figsize=(8,6.5))
-plt.plot(BGD_Pop[:,0], (1000*np.array(sev_inc_imis_post)), color=color_imis, linewidth=line_width)
-plt.plot(BGD_Pop[:,0], 1000*sev_inc_target, color='0.1')
-plt.title("Observed Severe Cholera Inc.", fontsize=title_size)
-plt.xlabel("Age", fontsize=ticks_size, color="white")
-plt.ylabel("hosp. cases per 1000", fontsize=ticks_size)
-plt.xticks(fontsize=ticks_size, color="white")
-plt.yticks([0,1,2,3], fontsize=ticks_size)
-fig.savefig('Sev_Inc_Targets_IMIS.png', dpi=500, bbox_inches='tight')
-
-#SIR
-#deaths post SIR
-fig=plt.figure(figsize=(8,6.5))
-plt.plot(BGD_Pop[:,0], (100*np.array(deaths_sir_post)), color=color_sir, linewidth=line_width)
-plt.plot(BGD_Pop[:,0], 100*deaths_target, color='0.1')
-plt.ylim((0, 20))
-plt.title("% Deaths from Cholera", fontsize=title_size, color='white')
-plt.xlabel("Age", fontsize=ticks_size, color="white")
-plt.ylabel("% deaths caused by cholera", fontsize=ticks_size)
-plt.xticks(fontsize=ticks_size, color="white")
-plt.yticks([0,5,10,15,20], fontsize=ticks_size)
-fig.savefig('Deaths_Targets_SIR.png', dpi=500, bbox_inches='tight')
-
-#incidence post SIR
-fig=plt.figure(figsize=(8,6.5))
-plt.plot(BGD_Pop[:,0], (1000*np.array(inc_sir_post)), color=color_sir, linewidth=line_width)
-plt.plot(BGD_Pop[:,0], 1000*inc_target, color='0.1')
-plt.title("Observed Cholera Incidence", fontsize=title_size, color='white')
-plt.xlabel("Age", fontsize=ticks_size, color="white")
-plt.ylabel("hosp. cases per 1000", fontsize=ticks_size)
-plt.xticks(fontsize=ticks_size, color="white")
-plt.yticks(fontsize=ticks_size)
-fig.savefig('Inc_Targets_SIR.png', dpi=500, bbox_inches='tight')
-
-#severe incidence post SIR
-fig=plt.figure(figsize=(8,6.5))
-plt.plot(BGD_Pop[:,0], (1000*np.array(sev_inc_sir_post)), color=color_sir, linewidth=line_width)
-plt.plot(BGD_Pop[:,0], 1000*sev_inc_target, color='0.1')
-plt.title("Observed Severe Cholera Inc.", fontsize=title_size, color='white')
-plt.xlabel("Age", fontsize=ticks_size, color="white")
-plt.ylabel("hosp. cases per 1000", fontsize=ticks_size)
-plt.xticks(fontsize=ticks_size, color="white")
-plt.yticks([0,1,2,3], fontsize=ticks_size)
-fig.savefig('Sev_Inc_Targets_SIR.png', dpi=500, bbox_inches='tight')
-
-#RANDOM SEARCH
-#deaths post RS
-fig=plt.figure(figsize=(8,6.5))
-plt.plot(BGD_Pop[:,0], (100*np.array(deaths_rs_post)), color=color_rs, linewidth=.5)
-plt.plot(BGD_Pop[:,0], 100*deaths_target, color='0.1')
-plt.ylim((0, 20))
-plt.title("% Deaths from Cholera", fontsize=title_size, color='white')
-plt.xlabel("Age", fontsize=ticks_size, color="white")
-plt.ylabel("% deaths caused by cholera", fontsize=ticks_size)
-plt.xticks(fontsize=ticks_size, color="white")
-plt.yticks([0,5,10,15,20], fontsize=ticks_size)
-fig.savefig('Deaths_Targets_RS.png', dpi=500, bbox_inches='tight')
-
-#incidence post RS
-fig=plt.figure(figsize=(8,6.5))
-plt.plot(BGD_Pop[:,0], (1000*np.array(inc_rs_post)), color=color_rs, linewidth=.5)
-plt.plot(BGD_Pop[:,0], 1000*inc_target, color='0.1')
-plt.title("Observed Cholera Incidence", fontsize=title_size, color='white')
-plt.xlabel("Age", fontsize=ticks_size, color="white")
-plt.ylabel("hosp. cases per 1000", fontsize=ticks_size)
-plt.xticks(fontsize=ticks_size, color="white")
-plt.yticks(fontsize=ticks_size)
-fig.savefig('Inc_Targets_RS.png', dpi=500, bbox_inches='tight')
-
-#severe incidence post RS
-fig=plt.figure(figsize=(8,6.5))
-plt.plot(BGD_Pop[:,0], (1000*np.array(sev_inc_rs_post)), color=color_rs, linewidth=.5)
-plt.plot(BGD_Pop[:,0], 1000*sev_inc_target, color='0.1')
-plt.title("Observed Severe Cholera Inc.", fontsize=title_size, color='white')
-plt.xlabel("Age", fontsize=ticks_size, color="white")
-plt.ylabel("hosp. cases per 1000", fontsize=ticks_size)
-plt.xticks(fontsize=ticks_size, color="white")
-plt.yticks([0,1,2,3], fontsize=ticks_size)
-fig.savefig('Sev_Inc_Targets_RS.png', dpi=500, bbox_inches='tight')
-
-#naive
-#deaths post naive
-fig=plt.figure(figsize=(8,6))
-plt.plot(BGD_Pop[:,0], (100*np.array(deaths_naive)), color=color_naive, linewidth=.5)
-plt.plot(BGD_Pop[:,0], 100*deaths_target, color='0.1')
-plt.title("% Deaths from Cholera (Naive)", fontsize=text_size)
-plt.xlabel("Age", fontsize=ticks_size)
-plt.ylabel("% deaths caused by cholera", fontsize=ticks_size)
-plt.xticks(fontsize=ticks_size)
-plt.yticks(fontsize=ticks_size)
-fig.savefig('Deaths_Targets_Naive.png', dpi=500, bbox_inches='tight')
-
-#incidence post naive
-fig=plt.figure(figsize=(8,6))
-plt.plot(BGD_Pop[:,0], (1000*np.array(inc_naive)), color=color_naive, linewidth=.5)
-plt.plot(BGD_Pop[:,0], 1000*inc_target, color='0.1')
-plt.title("Observed Cholera Incidence (Naive)", fontsize=text_size)
-plt.xlabel("Age", fontsize=ticks_size)
-plt.ylabel("hospitalized cases per 1000", fontsize=ticks_size)
-plt.xticks(fontsize=ticks_size)
-plt.yticks(fontsize=ticks_size)
-fig.savefig('Inc_Targets_Naive.png', dpi=500, bbox_inches='tight')
-
-#severe incidence post naive
-fig=plt.figure(figsize=(8,6))
-plt.plot(BGD_Pop[:,0], (1000*np.array(sev_inc_naive)), color=color_naive, linewidth=.5)
-plt.plot(BGD_Pop[:,0], 1000*sev_inc_target, color='0.1')
-plt.title("Observed Severe Cholera Inc. (Naive)", fontsize=text_size)
-plt.xlabel("Age", fontsize=ticks_size)
-plt.ylabel("hospitalized cases per 1000", fontsize=ticks_size)
-plt.xticks(fontsize=ticks_size)
-plt.yticks(fontsize=ticks_size)
-fig.savefig('Sev_Inc_Targets_Naive.png', dpi=500, bbox_inches='tight')
-
-#PRIORS
-#deaths random/prior
-fig=plt.figure(figsize=(8,6.5))
-plt.plot(BGD_Pop[:,0], (100*np.array(deaths_prior)), color=color_lit, linewidth=.001)
-plt.plot(BGD_Pop[:,0], 100*deaths_target, color='0.1')
-plt.title("% Deaths from Cholera", fontsize=title_size, color='white')
-plt.xlabel("Age", fontsize=text_size)
-plt.ylabel("% deaths caused by cholera", fontsize=ticks_size)
-plt.xticks(fontsize=ticks_size)
-plt.yticks(fontsize=ticks_size)
-fig.savefig('Deaths_Targets_Prior.png', dpi=500, bbox_inches='tight')
-
-#incidence prior 
-fig=plt.figure(figsize=(8,6.5))
-plt.plot(BGD_Pop[:,0], (1000*np.array(inc_prior)), color=color_lit, linewidth=.001)
-plt.plot(BGD_Pop[:,0], 1000*inc_target, color='0.1')
-plt.title("Observed Cholera Inc.", fontsize=title_size, color='white')
-plt.xlabel("Age", fontsize=text_size)
-plt.ylabel("hosp. cases per 1000", fontsize=ticks_size)
-plt.xticks(fontsize=ticks_size)
-plt.yticks([0,50,100,150,200], fontsize=ticks_size)
-fig.savefig('Inc_Targets_Prior.png', dpi=500, bbox_inches='tight')
-
-#severe incidence prior
-fig=plt.figure(figsize=(8,6.5))
-plt.plot(BGD_Pop[:,0], (1000*np.array(sev_inc_prior)), color=color_lit, linewidth=.001)
-plt.plot(BGD_Pop[:,0], 1000*sev_inc_target, color='0.1')
-plt.title("Observed Sev. Cholera Inc.", fontsize=title_size, color='white')
-plt.xlabel("Age", fontsize=text_size)
-plt.ylabel("hosp. cases per 1000", fontsize=ticks_size)
-plt.xticks(fontsize=ticks_size)
-plt.yticks(fontsize=ticks_size)
-fig.savefig('Sev_Inc_Targets_Prior.png', dpi=500, bbox_inches='tight')
 
 #HEATMAPS OF CORRELATIONS
-#table of means and quartiles - original
 table=pd.DataFrame()
 table['Mean']=params_imis_post.mean(0)
 table['Median']=params_imis_post.median(0)
@@ -514,65 +388,22 @@ table['25']=params_imis_post.quantile(q=0.25, axis=0)
 table['75']=params_imis_post.quantile(q=0.75, axis=0)
 table=table.iloc[1:] #remove likelihood row
 
-#correlations
 def upper_tri_mask(A):
     m=A.shape[0]
     r=np.arange(m)
     mask=r[:,None]<r
     return np.multiply(A,mask)
 
-#sns.set(font_scale=2)
 text_size=22
 
-#IMIS HEATMAPS
 corr=params_imis_post.corr().iloc[2:26,2:26] #remove likelihood, index, and chain columns/rows
 sns.set(style="white")
 corr2=upper_tri_mask(np.matrix(corr))
 #all age groups
 fig=plt.figure(figsize=((10,7.5)))
-heatmap=sns.heatmap(corr2, cmap='bwr', center=0, square=True, xticklabels=params_long, yticklabels=params_long)
+heatmap=sns.heatmap(corr2, cmap='bwr', center=0, square=True, xticklabels=param_list_long, yticklabels=param_list_long)
 plt.title("IMIS Correlations", fontsize=text_size)
-fig.savefig('Heatmap_Post_IMIS.png', dpi=500, bbox_inches='tight')
-
-#correlations for each age group
-params_long2=list(['Incidence','Case Fatality w/out Tx', 'Case Fatality w/ Tx',
-                      'Severity', 'Mild Hospitalization','Severe Hospitalization'])
-#sns.set(font_scale=1.5) #to reset, use sns.set(font_scale=1)
-corr_0=params_imis_post.iloc[:,[4,8,12,16,20,24]].corr()
-corr2_0=upper_tri_mask(np.matrix(corr_0))
-fig=plt.figure(figsize=((10,7.5)))
-heatmap=sns.heatmap(corr2_0, cmap='bwr', center=0, square=True, xticklabels=params_long2, yticklabels=params_long2)
-heatmap.set_xticklabels(heatmap.get_xmajorticklabels(), fontsize=text_size)
-heatmap.set_yticklabels(heatmap.get_ymajorticklabels(), fontsize=text_size)
-plt.title("Ages <1, IMIS", fontsize=text_size)
-fig.savefig('Heatmap_Post_IMIS0.png', dpi=500, bbox_inches='tight')
-
-corr_1=params_imis_post.iloc[:,[5,9,13,17,21,25]].corr()
-corr2_1=upper_tri_mask(np.matrix(corr_1))
-fig=plt.figure(figsize=((10,7.5)))
-heatmap=sns.heatmap(corr2_1, cmap='bwr', center=0, square=True, xticklabels=params_long2, yticklabels=params_long2)
-heatmap.set_xticklabels(heatmap.get_xmajorticklabels(), fontsize=text_size)
-heatmap.set_yticklabels(heatmap.get_ymajorticklabels(), fontsize=text_size)
-plt.title("Ages 1-4, IMIS", fontsize=text_size)
-fig.savefig('Heatmap_Post_IMIS1.png', dpi=500, bbox_inches='tight')
-
-corr_2=params_imis_post.iloc[:,[6,10,14,18,22,26]].corr()
-corr2_2=upper_tri_mask(np.matrix(corr_2))
-fig=plt.figure(figsize=((10,7.5)))
-heatmap=sns.heatmap(corr2_2, cmap='bwr', center=0, square=True, xticklabels=params_long2, yticklabels=params_long2)
-heatmap.set_xticklabels(heatmap.get_xmajorticklabels(), fontsize=text_size)
-heatmap.set_yticklabels(heatmap.get_ymajorticklabels(), fontsize=text_size)
-plt.title("Ages 5-14, IMIS", fontsize=text_size)
-fig.savefig('Heatmap_Post_IMIS2.png', dpi=500, bbox_inches='tight')
-
-corr_3=params_imis_post.iloc[:,[7,11,15,19,23,27]].corr()
-corr2_3=upper_tri_mask(np.matrix(corr_3))
-fig=plt.figure(figsize=((10,7.5)))
-heatmap=sns.heatmap(corr2_3, cmap='bwr', center=0, square=True, xticklabels=params_long2, yticklabels=params_long2)
-heatmap.set_xticklabels(heatmap.get_xmajorticklabels(), fontsize=text_size)
-heatmap.set_yticklabels(heatmap.get_ymajorticklabels(), fontsize=text_size)
-plt.title("Ages 15+, IMIS", fontsize=text_size)
-fig.savefig('Heatmap_Post_IMIS3.png', dpi=500, bbox_inches='tight')
+fig.savefig('heatmap_imis.png', dpi=500, bbox_inches='tight')
 
 #SIR HEATMAPS
 sns.set(style="white")
@@ -580,114 +411,17 @@ corr=params_sir_post.corr().iloc[4:,4:] #remove likelihood, index, and chain col
 corr2=upper_tri_mask(np.matrix(corr))
 #all age groups
 fig=plt.figure(figsize=((10,7.5)))
-heatmap=sns.heatmap(corr2, cmap='bwr', center=0, square=True, xticklabels=params_long, yticklabels=params_long)
+heatmap=sns.heatmap(corr2, cmap='bwr', center=0, square=True, xticklabels=param_list_long, yticklabels=param_list_long)
 plt.title("SIR Correlations", fontsize=text_size)
-fig.savefig('Heatmap_Post_SIR.png', dpi=500, bbox_inches='tight')
-
-#correlations for each age group
-corr_0=params_sir_post.iloc[:,[4,8,12,16,20,24]].corr()
-corr2_0=upper_tri_mask(np.matrix(corr_0))
-fig=plt.figure(figsize=((10,7.5)))
-heatmap=sns.heatmap(corr2_0, cmap='bwr', center=0, square=True, xticklabels=params_long2, yticklabels=params_long2)
-heatmap.set_xticklabels(heatmap.get_xmajorticklabels(), fontsize=text_size)
-heatmap.set_yticklabels(heatmap.get_ymajorticklabels(), fontsize=text_size)
-plt.title("Ages <1, SIR", fontsize=text_size)
-fig.savefig('Heatmap_Post_SIR0.png', dpi=500, bbox_inches='tight')
-
-corr_1=params_sir_post.iloc[:,[5,9,13,17,21,25]].corr()
-corr2_1=upper_tri_mask(np.matrix(corr_1))
-fig=plt.figure(figsize=((10,7.5)))
-heatmap=sns.heatmap(corr2_1, cmap='bwr', center=0, square=True, xticklabels=params_long2, yticklabels=params_long2)
-heatmap.set_xticklabels(heatmap.get_xmajorticklabels(), fontsize=text_size)
-heatmap.set_yticklabels(heatmap.get_ymajorticklabels(), fontsize=text_size)
-plt.title("Ages 1-4, SIR", fontsize=text_size)
-fig.savefig('Heatmap_Post_SIR1.png', dpi=500, bbox_inches='tight')
-
-corr_2=params_sir_post.iloc[:,[6,10,14,18,22,26]].corr()
-corr2_2=upper_tri_mask(np.matrix(corr_2))
-fig=plt.figure(figsize=((10,7.5)))
-heatmap=sns.heatmap(corr2_2, cmap='bwr', center=0, square=True, xticklabels=params_long2, yticklabels=params_long2)
-heatmap.set_xticklabels(heatmap.get_xmajorticklabels(), fontsize=text_size)
-heatmap.set_yticklabels(heatmap.get_ymajorticklabels(), fontsize=text_size)
-plt.title("Ages 5-14, SIR", fontsize=text_size)
-fig.savefig('Heatmap_Post_SIR2.png', dpi=500, bbox_inches='tight')
-
-corr_3=params_sir_post.iloc[:,[7,11,15,19,23,27]].corr()
-corr2_3=upper_tri_mask(np.matrix(corr_3))
-fig=plt.figure(figsize=((10,7.5)))
-heatmap=sns.heatmap(corr2_3, cmap='bwr', center=0, square=True, xticklabels=params_long2, yticklabels=params_long2)
-heatmap.set_xticklabels(heatmap.get_xmajorticklabels(), fontsize=text_size)
-heatmap.set_yticklabels(heatmap.get_ymajorticklabels(), fontsize=text_size)
-plt.title("Ages 15+, SIR", fontsize=text_size)
-fig.savefig('Heatmap_Post_SIR3.png', dpi=500, bbox_inches='tight')
+fig.savefig('heatmap_sir.png', dpi=500, bbox_inches='tight')
 
 #RANDOM SEARCH HEATMAPS
 corr=params_rs_post.corr() #no columns/rows to remove
 corr2=upper_tri_mask(np.matrix(corr))
 #all age groups
 fig=plt.figure(figsize=((10,7.5)))
-heatmap=sns.heatmap(corr2, cmap='bwr', center=0, square=True, xticklabels=params_long, yticklabels=params_long)
+heatmap=sns.heatmap(corr2, cmap='bwr', center=0, square=True, xticklabels=param_list_long, yticklabels=param_list_long)
 plt.title("RS Correlations", fontsize=text_size)
-fig.savefig('Heatmap_Post_RS.png', dpi=500, bbox_inches='tight')
-
-#correlations for each age group
-corr_0=params_rs_post.iloc[:,[0,4,8,12,16,20]].corr()
-corr2_0=upper_tri_mask(np.matrix(corr_0))
-fig=plt.figure(figsize=((10,7.5)))
-heatmap=sns.heatmap(corr2_0, cmap='bwr', center=0, square=True, xticklabels=params_long2, yticklabels=params_long2)
-heatmap.set_xticklabels(heatmap.get_xmajorticklabels(), fontsize=text_size)
-heatmap.set_yticklabels(heatmap.get_ymajorticklabels(), fontsize=text_size)
-plt.title("Ages <1, RS", fontsize=text_size)
-fig.savefig('Heatmap_Post_RS0.png', dpi=500, bbox_inches='tight')
-
-corr_1=params_rs_post.iloc[:,[1,5,9,13,17,21]].corr()
-corr2_1=upper_tri_mask(np.matrix(corr_1))
-fig=plt.figure(figsize=((10,7.5)))
-heatmap=sns.heatmap(corr2_1, cmap='bwr', center=0, square=True, xticklabels=params_long2, yticklabels=params_long2)
-heatmap.set_xticklabels(heatmap.get_xmajorticklabels(), fontsize=text_size)
-heatmap.set_yticklabels(heatmap.get_ymajorticklabels(), fontsize=text_size)
-plt.title("Ages 1-4, RS", fontsize=text_size)
-fig.savefig('Heatmap_Post_RS1.png', dpi=500, bbox_inches='tight')
-
-corr_2=params_rs_post.iloc[:,[2,6,10,14,18,22]].corr()
-corr2_2=upper_tri_mask(np.matrix(corr_2))
-fig=plt.figure(figsize=((10,7.5)))
-heatmap=sns.heatmap(corr2_2, cmap='bwr', center=0, square=True, xticklabels=params_long2, yticklabels=params_long2)
-heatmap.set_xticklabels(heatmap.get_xmajorticklabels(), fontsize=text_size)
-heatmap.set_yticklabels(heatmap.get_ymajorticklabels(), fontsize=text_size)
-plt.title("Ages 5-14, RS", fontsize=text_size)
-fig.savefig('Heatmap_Post_RS2.png', dpi=500, bbox_inches='tight')
-
-corr_3=params_rs_post.iloc[:,[3,7,11,15,19,23]].corr()
-corr2_3=upper_tri_mask(np.matrix(corr_3))
-fig=plt.figure(figsize=((10,7.5)))
-heatmap=sns.heatmap(corr2_3, cmap='bwr', center=0, square=True, xticklabels=params_long2, yticklabels=params_long2)
-heatmap.set_xticklabels(heatmap.get_xmajorticklabels(), fontsize=text_size)
-heatmap.set_yticklabels(heatmap.get_ymajorticklabels(), fontsize=text_size)
-plt.title("Ages 15+, RS", fontsize=text_size)
-fig.savefig('Heatmap_Post_RS3.png', dpi=500, bbox_inches='tight')
-
-#FIT WITHIN TARGETS - PERFORMANCE METRIC
-fit=targets_imis_post.copy().iloc[:,4:]
-fit=fit-targets.loc['low (99)']
-fit.insert(0, 'Flag', 0)
-fit.Flag=1*(np.sum(fit.iloc[:,1:13]<0, axis=1)>0)
-fit=fit.loc[fit.Flag==0]
-fit.iloc[:,1:13]=fit.iloc[:,1:13]+targets.loc['low (99)']
-fit.iloc[:,1:13]=targets.loc['high (99)']-fit.iloc[:,1:13]
-fit.Flag=1*(np.sum(fit.iloc[:,1:13]<0, axis=1)>0)
-fit=fit.loc[fit.Flag==0]
-fit_imis=np.shape(fit)[0]/np.shape(targets_imis_post)[0]
-
-fit=targets_sir_post.copy().iloc[:,4:17]
-fit=fit-targets.loc['low (99)']
-fit.insert(0, 'Flag', 0)
-fit.Flag=1*(np.sum(fit.iloc[:,1:13]<0, axis=1)>0)
-fit=fit.loc[fit.Flag==0]
-fit.iloc[:,1:13]=fit.iloc[:,1:13]+targets.loc['low (99)']
-fit.iloc[:,1:13]=targets.loc['high (99)']-fit.iloc[:,1:13]
-fit.Flag=1*(np.sum(fit.iloc[:,1:13]<0, axis=1)>0)
-fit=fit.loc[fit.Flag==0]
-fit_sir=np.shape(fit)[0]/np.shape(targets_sir_post)[0]
+fig.savefig('heatmap_rs.png', dpi=500, bbox_inches='tight')
 
 
