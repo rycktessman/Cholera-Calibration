@@ -7,7 +7,6 @@
 
 import numpy as np
 import pandas as pd
-#import random
 
 #sample_post combines posterior samples from IMIS and/or SIR. Inputs include:
     #1. imis: if only SIR was run, set imis=0. Otherwise, set to equal number of rounds of imis conducted (equal to end-start from Cholera_Calibration_IMIS)

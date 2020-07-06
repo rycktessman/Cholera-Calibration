@@ -144,7 +144,7 @@ if __name__=='__main__':
     print(array)
     print(iterations)
     print(n)
-    #total draws=1000*5000*10000 = 50 billion
+    #total samples = array * iterations * n
     
     run_rs(array, iterations, n)
     
